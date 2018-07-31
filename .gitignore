@@ -87,3 +87,8 @@ fabric.properties
 # Maven target folder
 
 target/
+
+# Server settings
+src/main/config/server.properties
+src/main/config/geoengine.properties
+src/main/config/loginserver.properties
