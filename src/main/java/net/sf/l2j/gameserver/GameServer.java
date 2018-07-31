@@ -129,6 +129,9 @@ public class GameServer
 		new File("./log/gmaudit").mkdir();
 		new File("./log/item").mkdir();
 		new File("./data/crests").mkdirs();
+
+		String current = new java.io.File( "." ).getCanonicalPath();
+		System.out.println("Current dir:"+current);
 		
 		// Create input stream for log file -- or store file data into memory
 		try (InputStream is = new FileInputStream(new File("config/logging.properties")))
