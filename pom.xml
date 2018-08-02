@@ -9,19 +9,22 @@
     <!-- Output to jar format -->
     <packaging>jar</packaging>
     <build>
+        <defaultGoal>package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                   <source>1.8</source>
+                   <target>1.8</target>
                 </configuration>
             </plugin>
-            <!-- Make this jar executable -->
+        <!-- Make this jar executable -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
                 <configuration>
                     <!-- DO NOT include log4j.properties file in your Jar -->
                     <excludes>
@@ -59,6 +62,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
                 <executions>
                     <execution>
                         <id>copy-config</id>
