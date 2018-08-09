@@ -14,6 +14,8 @@ import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
 
+import static net.sf.l2j.Config.TELEPORT_MAX_LEVEL;
+
 public final class Gatekeeper extends Folk
 {
 	private static final int COND_BUSY_BECAUSE_OF_SIEGE = 1;
@@ -76,7 +78,8 @@ public final class Gatekeeper extends Folk
 				
 				if (!list.isNoble())
 				{
-					if (cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
+				    if (player.getLevel() <= TELEPORT_MAX_LEVEL) price = 0;
+					else if (cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
 						price /= 2;
 				}
 				
@@ -100,8 +103,13 @@ public final class Gatekeeper extends Folk
 			catch (NumberFormatException nfe)
 			{
 			}
-			
-			if (val == 1 && cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
+
+			if (val == 1 && player.getLevel() <= TELEPORT_MAX_LEVEL) //WTF val??? [Moryak]
+            {
+                showZeroPriceHtml(player);
+                return;
+            }
+			else if (val == 1 && cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
 			{
 				showHalfPriceHtml(player);
 				return;
@@ -125,16 +133,33 @@ public final class Gatekeeper extends Folk
 	}
 	
 	private void showHalfPriceHtml(Player player)
+{
+	if (player == null)
+		return;
+
+	final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
+
+	String content = HtmCache.getInstance().getHtm("data/html/teleporter/half/" + getNpcId() + ".htm");
+	if (content == null)
+		content = HtmCache.getInstance().getHtmForce("data/html/teleporter/" + getNpcId() + "-1.htm");
+
+	html.setHtml(content);
+	html.replace("%objectId%", getObjectId());
+	html.replace("%npcname%", getName());
+	player.sendPacket(html);
+}
+
+	private void showZeroPriceHtml(Player player)
 	{
 		if (player == null)
 			return;
-		
+
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
-		
-		String content = HtmCache.getInstance().getHtm("data/html/teleporter/half/" + getNpcId() + ".htm");
+
+		String content = HtmCache.getInstance().getHtm("data/html/teleporter/free/" + getNpcId() + ".htm");
 		if (content == null)
 			content = HtmCache.getInstance().getHtmForce("data/html/teleporter/" + getNpcId() + "-1.htm");
-		
+
 		html.setHtml(content);
 		html.replace("%objectId%", getObjectId());
 		html.replace("%npcname%", getName());

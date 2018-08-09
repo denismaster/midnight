@@ -27,7 +27,8 @@ import net.sf.l2j.gameserver.model.holder.IntIntHolder;
 public final class Config
 {
 	private static final Logger _log = Logger.getLogger(Config.class.getName());
-	
+
+
 	public static final String CLANS_FILE = "./config/clans.properties";
 	public static final String EVENTS_FILE = "./config/events.properties";
 	public static final String GEOENGINE_FILE = "./config/geoengine.properties";
@@ -37,8 +38,14 @@ public final class Config
 	public static final String PLAYERS_FILE = "./config/players.properties";
 	public static final String SERVER_FILE = "./config/server.properties";
 	public static final String SIEGE_FILE = "./config/siege.properties";
-	
-	// --------------------------------------------------
+    public static final String TELEPORT_FILE = "./config/teleport.properties";
+
+    // --------------------------------------------------
+    // Настройки телепорта
+    // --------------------------------------------------
+    public static int TELEPORT_MAX_LEVEL;
+
+    // --------------------------------------------------
 	// Clans settings
 	// --------------------------------------------------
 	
@@ -714,7 +721,11 @@ public final class Config
 		}
 		return result;
 	}
-	
+    private static final void loadTeleport()
+    {
+        final ExProperties teleport = initProperties(TELEPORT_FILE);
+        TELEPORT_MAX_LEVEL = teleport.getProperty("FreeTeleportMaxLevel",20);
+    }
 	/**
 	 * Loads clan and clan hall settings.
 	 */
@@ -1386,6 +1397,9 @@ public final class Config
 		
 		// server settings
 		loadServer();
+
+        //teleport settings
+        loadTeleport();
 	}
 	
 	public static final void loadLoginServer()
