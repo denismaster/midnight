@@ -79,24 +79,29 @@ public class GeoEngine
 		final ExProperties props = Config.initProperties(Config.GEOENGINE_FILE);
 		int loaded = 0;
 		int failed = 0;
-		for (int rx = World.TILE_X_MIN; rx <= World.TILE_X_MAX; rx++)
-		{
-			for (int ry = World.TILE_Y_MIN; ry <= World.TILE_Y_MAX; ry++)
-			{
-				if (props.containsKey(String.valueOf(rx) + "_" + String.valueOf(ry)))
-				{
-					// region file is load-able, try to load it
-					if (loadGeoBlocks(rx, ry))
-						loaded++;
-					else
-						failed++;
-				}
-				else
-				{
-					// region file is not load-able, load null blocks
-					loadNullBlocks(rx, ry);
+
+		Boolean isEnabled = props.getProperty("Enabled", true);
+
+		if(isEnabled) {
+			_log.info("GeoEngine: Enabled. Starting initialization...");
+
+			for (int rx = World.TILE_X_MIN; rx <= World.TILE_X_MAX; rx++) {
+				for (int ry = World.TILE_Y_MIN; ry <= World.TILE_Y_MAX; ry++) {
+					if (props.containsKey(String.valueOf(rx) + "_" + String.valueOf(ry))) {
+						// region file is load-able, try to load it
+						if (loadGeoBlocks(rx, ry))
+							loaded++;
+						else
+							failed++;
+					} else {
+						// region file is not load-able, load null blocks
+						loadNullBlocks(rx, ry);
+					}
 				}
 			}
+		}
+		else{
+			_log.info("GeoEngine: Disabled. Skipping initialization...");
 		}
 		_log.info("GeoEngine: Loaded " + loaded + " L2D region files.");
 		
