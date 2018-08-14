@@ -44,7 +44,7 @@ public final class Config
     // Настройки телепорта
     // --------------------------------------------------
     public static int TELEPORT_MAX_LEVEL;
-
+	public static boolean NIGHT_TELEPORT_ENABLED;
     // --------------------------------------------------
 	// Clans settings
 	// --------------------------------------------------
@@ -725,6 +725,7 @@ public final class Config
     {
         final ExProperties teleport = initProperties(TELEPORT_FILE);
         TELEPORT_MAX_LEVEL = teleport.getProperty("FreeTeleportMaxLevel",20);
+		NIGHT_TELEPORT_ENABLED = teleport.getProperty("NightTeleportEnabled",true);
     }
 	/**
 	 * Loads clan and clan hall settings.
