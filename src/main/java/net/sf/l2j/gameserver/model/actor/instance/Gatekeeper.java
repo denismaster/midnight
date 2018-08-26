@@ -13,6 +13,7 @@ import net.sf.l2j.gameserver.model.location.TeleportLocation;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.NpcHtmlMessage;
+import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
 
 import static net.sf.l2j.Config.TELEPORT_MAX_LEVEL;
 
@@ -79,8 +80,7 @@ public final class Gatekeeper extends Folk
 				if (!list.isNoble())
 				{
 				    if (player.getLevel() <= TELEPORT_MAX_LEVEL) price = 0;
-					else if (cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
-						price /= 2;
+					else if (GameTimeTaskManager.getInstance().isNight()) price /= 2;
 				}
 				
 				if (player.destroyItemByItemId("Teleport ", (list.isNoble()) ? 6651 : 57, price, this, true))
@@ -109,11 +109,11 @@ public final class Gatekeeper extends Folk
                 showZeroPriceHtml(player);
                 return;
             }
-			else if (val == 1 && cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
-			{
-				showHalfPriceHtml(player);
-				return;
-			}
+            else if (val == 1 && GameTimeTaskManager.getInstance().isNight())
+            {
+                showHalfPriceHtml(player);
+                return;
+            }
 			showChatWindow(player, val);
 		}
 		else
@@ -157,8 +157,8 @@ public final class Gatekeeper extends Folk
 		final NpcHtmlMessage html = new NpcHtmlMessage(getObjectId());
 
 		String content = HtmCache.getInstance().getHtm("data/html/teleporter/free/" + getNpcId() + ".htm");
-		if (content == null)
-			content = HtmCache.getInstance().getHtmForce("data/html/teleporter/" + getNpcId() + "-1.htm");
+        if (content == null) content = HtmCache.getInstance().getHtm("data/html/teleporter/half/" + getNpcId() + ".htm");
+		if (content == null) content = HtmCache.getInstance().getHtmForce("data/html/teleporter/" + getNpcId() + "-1.htm");
 
 		html.setHtml(content);
 		html.replace("%objectId%", getObjectId());
