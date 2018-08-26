@@ -80,8 +80,6 @@ public final class Gatekeeper extends Folk
 				if (!list.isNoble())
 				{
 				    if (player.getLevel() <= TELEPORT_MAX_LEVEL) price = 0;
-					/*else if (cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
-						price /= 2;*/ //И так сойдет
 					else if (GameTimeTaskManager.getInstance().isNight()) price /= 2;
 				}
 				
@@ -111,11 +109,6 @@ public final class Gatekeeper extends Folk
                 showZeroPriceHtml(player);
                 return;
             }
-			/*else if (val == 1 && cal.get(Calendar.HOUR_OF_DAY) >= 20 && cal.get(Calendar.HOUR_OF_DAY) <= 23 && (cal.get(Calendar.DAY_OF_WEEK) == 1 || cal.get(Calendar.DAY_OF_WEEK) == 7))
-			{
-				showHalfPriceHtml(player);
-				return;
-			}*/
             else if (val == 1 && GameTimeTaskManager.getInstance().isNight())
             {
                 showHalfPriceHtml(player);
